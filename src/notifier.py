@@ -34,10 +34,6 @@ def send_giveaway(webhook_url, game):
         icon_url="https://files.catbox.moe/cy5a0u.png",
     )
 
-    embed.set_thumbnail(
-        url=EPIC_ICON_URL
-    )
-
     embed.set_description(
         "⚠️ **Not part of Epic Games' official weekly free games.**\n\n"
         "Claim it before the promotion ends!"
@@ -84,10 +80,7 @@ def send_giveaway(webhook_url, game):
     if image:
         embed.set_image(url=image)
 
-    embed.set_footer(
-        text="Subho's EGS Developer Giveaway Informer",
-        icon_url="https://files.catbox.moe/qttqpy.png",
-    )
+   
 
     webhook.add_embed(embed)
 
