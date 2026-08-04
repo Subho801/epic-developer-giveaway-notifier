@@ -89,8 +89,6 @@ def send_giveaway(webhook_url, game):
         icon_url="https://files.catbox.moe/qttqpy.png",
     )
 
-    embed.set_timestamp()
-
     webhook.add_embed(embed)
 
     return webhook.execute()
