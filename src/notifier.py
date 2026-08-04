@@ -80,17 +80,17 @@ def send_giveaway(webhook_url, game):
     if image:
         embed.set_image(url=image)
 
-   
-
     webhook.add_embed(embed)
 
     response = webhook.execute()
 
-print(f"Webhook status code {response.status_code}")
+    print(f"Webhook status code {response.status_code}")
 
-try:
-    print(response.text)
-except Exception:
-    pass
+    try:
+        print(response.text)
+    except Exception:
+        pass
 
-return response
+    return response
+
+
