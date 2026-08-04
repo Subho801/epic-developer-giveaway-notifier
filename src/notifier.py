@@ -1,7 +1,5 @@
 from discord_webhook import DiscordWebhook, DiscordEmbed
 
-from src.config import COUNTRY
-
 from src.utils import (
     discord_timestamp,
     get_store_url,
@@ -10,12 +8,14 @@ from src.utils import (
 
 from src.epic import (
     get_developer,
-    get_publisher,
     get_original_price,
     get_end_date,
 )
 
-# Replace these with your own image URLs
+
+EPIC_ICON_URL = "https://files.catbox.moe/cy5a0u.png"
+
+RONALDO_ICON_URL = "https://files.catbox.moe/qttqpy.png"
 
 
 def send_giveaway(webhook_url, game):
@@ -29,12 +29,11 @@ def send_giveaway(webhook_url, game):
 
     embed.set_author(
         name="Epic Games Developer Giveaway",
-        icon_url="https://files.catbox.moe/cy5a0u.png",
+        icon_url=EPIC_ICON_URL,
     )
 
     embed.set_description(
-        "⚠️ **Not part of Epic Games' official weekly free games.**\n\n"
-        "Claim it before the promotion ends!"
+        "⚠️ **Not part of Epic Games' official weekly free games.**"
     )
 
     embed.add_embed_field(
@@ -44,19 +43,7 @@ def send_giveaway(webhook_url, game):
     )
 
     embed.add_embed_field(
-        name="🏢 Publisher",
-        value=get_publisher(game),
-        inline=True,
-    )
-
-    embed.add_embed_field(
-        name="🌍 Region",
-        value=COUNTRY,
-        inline=True,
-    )
-
-    embed.add_embed_field(
-        name="💸 Discount",
+        name="💸 Price",
         value=f"~~{get_original_price(game)}~~ → **FREE**",
         inline=True,
     )
@@ -64,7 +51,7 @@ def send_giveaway(webhook_url, game):
     embed.add_embed_field(
         name="⏰ Ends",
         value=discord_timestamp(get_end_date(game)),
-        inline=True,
+        inline=False,
     )
 
     embed.add_embed_field(
@@ -78,11 +65,16 @@ def send_giveaway(webhook_url, game):
     if image:
         embed.set_image(url=image)
 
+    embed.set_footer(
+        text="Subho's EGS Developer Giveaway Informer",
+        icon_url=RONALDO_ICON_URL,
+    )
+
     webhook.add_embed(embed)
 
     response = webhook.execute()
 
-    print(f"Webhook status code {response.status_code}")
+    print(f"Webhook status code: {response.status_code}")
 
     try:
         print(response.text)
@@ -90,5 +82,3 @@ def send_giveaway(webhook_url, game):
         pass
 
     return response
-
-
