@@ -112,21 +112,25 @@ def fetch_official_freebies(country="US"):
 
     official = set()
 
-    games = (
+    elements = (
         data["data"]["Catalog"]["searchStore"]["elements"]
     )
 
-    for game in games:
+    for game in elements:
 
-        promotions = game.get("promotions")
-
-        if not promotions:
+        if not game.get("promotions"):
             continue
 
-        official.add(game["title"])
+        title = game.get("title")
+        slug = game.get("productSlug") or game.get("urlSlug")
+
+        if title:
+            official.add(title)
+
+        if slug:
+            official.add(slug)
 
     return official
-
 def fetch_catalog_page(country="US", start=0):
     """
     Fetch a single page from the Epic catalog.
@@ -212,7 +216,7 @@ def is_free(game):
 
 def developer_giveaways(country="US"):
     """
-    Return developer giveaways only.
+    Return only developer giveaways.
     """
 
     official = fetch_official_freebies(country)
@@ -226,7 +230,13 @@ def developer_giveaways(country="US"):
         if not is_free(game):
             continue
 
-        if game["title"] in official:
+        title = game.get("title")
+        slug = game.get("productSlug") or game.get("urlSlug")
+
+        if title in official:
+            continue
+
+        if slug in official:
             continue
 
         giveaways.append(game)
