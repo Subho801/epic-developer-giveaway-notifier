@@ -16,8 +16,6 @@ from src.epic import (
 )
 
 # Replace these with your own image URLs
-EPIC_ICON_URL = "https://YOUR_EPIC_LOGO_URL.png"
-RONALDO_ICON_URL = "https://YOUR_RONALDO_IMAGE_URL.png"
 
 
 def send_giveaway(webhook_url, game):
