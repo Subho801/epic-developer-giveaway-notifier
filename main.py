@@ -1,13 +1,14 @@
-from src.config import WEBHOOK_URL, validate
-from src.notifier import send_test
+from src.config import COUNTRY
+from src.epic import developer_giveaways
 
 
 def main():
-    validate()
+    games = developer_giveaways(COUNTRY)
 
-    status = send_test(WEBHOOK_URL)
+    print(f"Found {len(games)} developer giveaways")
 
-    print(status)
+    for game in games:
+        print("-", game["title"])
 
 
 if __name__ == "__main__":
