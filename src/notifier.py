@@ -1,5 +1,7 @@
 from discord_webhook import DiscordWebhook, DiscordEmbed
 
+from src.config import COUNTRY
+
 from src.utils import (
     discord_timestamp,
     get_store_url,
@@ -13,47 +15,67 @@ from src.epic import (
     get_end_date,
 )
 
+# Replace these with your own image URLs
+EPIC_ICON_URL = "https://YOUR_EPIC_LOGO_URL.png"
+RONALDO_ICON_URL = "https://YOUR_RONALDO_IMAGE_URL.png"
+
 
 def send_giveaway(webhook_url, game):
     webhook = DiscordWebhook(url=webhook_url)
 
     embed = DiscordEmbed(
-        title=game["title"],
+        title=f"🎁 {game['title']}",
         url=get_store_url(game),
-        color="2ecc71",
+        color=0x2ECC71,
     )
 
     embed.set_author(
-        name="Epic Developer Giveaway"
+        name="Epic Games Developer Giveaway",
+        icon_url="https://files.catbox.moe/cy5a0u.png",
+    )
+
+    embed.set_thumbnail(
+        url=EPIC_ICON_URL
     )
 
     embed.set_description(
-        "⚠️ This is **NOT** part of Epic's official weekly free games."
+        "⚠️ **Not part of Epic Games' official weekly free games.**\n\n"
+        "Claim it before the promotion ends!"
     )
 
     embed.add_embed_field(
-        name="Developer",
+        name="👨‍💻 Developer",
         value=get_developer(game),
         inline=True,
     )
 
     embed.add_embed_field(
-        name="Publisher",
+        name="🏢 Publisher",
         value=get_publisher(game),
         inline=True,
     )
 
     embed.add_embed_field(
-        name="Original Price",
-        value=get_original_price(game),
+        name="🌍 Region",
+        value=COUNTRY,
         inline=True,
     )
 
     embed.add_embed_field(
-        name="Ends",
-        value=discord_timestamp(
-            get_end_date(game)
-        ),
+        name="💸 Discount",
+        value=f"~~{get_original_price(game)}~~ → **FREE**",
+        inline=True,
+    )
+
+    embed.add_embed_field(
+        name="⏰ Ends",
+        value=discord_timestamp(get_end_date(game)),
+        inline=True,
+    )
+
+    embed.add_embed_field(
+        name="🔗 Store Page",
+        value=f"[Open Store]({get_store_url(game)})",
         inline=False,
     )
 
@@ -61,6 +83,13 @@ def send_giveaway(webhook_url, game):
 
     if image:
         embed.set_image(url=image)
+
+    embed.set_footer(
+        text="Subho's EGS Developer Giveaway Informer",
+        icon_url="https://files.catbox.moe/qttqpy.png",
+    )
+
+    embed.set_timestamp()
 
     webhook.add_embed(embed)
 
