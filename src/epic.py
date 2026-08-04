@@ -197,16 +197,20 @@ def fetch_all_catalog(country="US"):
 
 def is_free(game):
     """
-    Returns True if the game is temporarily 100% free.
+    Return True if the game is currently 100% off.
     """
 
-    total = (
-        game.get("price", {})
-        .get("totalPrice", {})
-    )
+    price = game.get("price")
+
+    if not price:
+        return False
+
+    total = price.get("totalPrice")
+
+    if not total:
+        return False
 
     original = total.get("originalPrice")
-
     discount = total.get("discountPrice")
 
     if original is None or discount is None:
