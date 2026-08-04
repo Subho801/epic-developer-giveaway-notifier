@@ -68,27 +68,40 @@ def format_price(price):
     return f"${price / 100:.2f}"
 
 
-def get_best_image(images):
+def get_best_image(game):
     """
-    Pick the nicest image from Epic's keyImages.
+    Return the best available image for a game.
     """
 
-    if not images:
-        return None
+    images = game.get("keyImages") or []
 
     preferred = [
         "DieselStoreFrontWide",
         "OfferImageWide",
         "Thumbnail",
-        "DieselGameBox"
+        "DieselGameBox",
     ]
 
+    # First pass: preferred image types
     for image_type in preferred:
         for image in images:
+            if not isinstance(image, dict):
+                continue
+
             if image.get("type") == image_type:
                 return image.get("url")
 
-    return images[0].get("url")
+    # Second pass: first valid URL
+    for image in images:
+        if isinstance(image, dict):
+            url = image.get("url")
+            if url:
+                return url
+
+        elif isinstance(image, str):
+            return image
+
+    return None
 
 
 def is_raw_slug(slug):
