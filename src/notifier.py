@@ -22,7 +22,7 @@ def send_giveaway(webhook_url, game):
     webhook = DiscordWebhook(url=webhook_url)
 
     embed = DiscordEmbed(
-        title=f"🎁 {game['title']}",
+        title=game["title"],
         url=get_store_url(game),
         color=0x2ECC71,
     )
@@ -46,12 +46,6 @@ def send_giveaway(webhook_url, game):
         name="💸 Price",
         value=f"~~{get_original_price(game)}~~ → **FREE**",
         inline=True,
-    )
-
-    embed.add_embed_field(
-        name="⏰ Ends",
-        value=discord_timestamp(get_end_date(game)),
-        inline=False,
     )
 
     embed.add_embed_field(
