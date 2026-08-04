@@ -246,3 +246,49 @@ def developer_giveaways(country="US"):
         giveaways.append(game)
 
     return giveaways
+
+def get_developer(game):
+    return (
+        game.get("developerDisplayName")
+        or game.get("publisherDisplayName")
+        or (game.get("seller") or {}).get("name")
+        or "Unknown"
+    )
+
+
+def get_publisher(game):
+    return (
+        game.get("publisherDisplayName")
+        or (game.get("seller") or {}).get("name")
+        or "Unknown"
+    )
+
+
+def get_original_price(game):
+    total = (game.get("price") or {}).get("totalPrice") or {}
+
+    fmt = total.get("fmtPrice") or {}
+    if fmt.get("originalPrice"):
+        return fmt["originalPrice"]
+
+    value = total.get("originalPrice")
+    currency = total.get("currencyCode", "")
+
+    if value is None:
+        return "Unknown"
+
+    if currency == "USD":
+        return f"${value / 100:.2f}"
+
+    return f"{value / 100:.2f} {currency}"
+
+
+def get_end_date(game):
+    promos = (game.get("promotions") or {}).get("promotionalOffers") or []
+
+    if promos:
+        offers = promos[0].get("promotionalOffers") or []
+        if offers:
+            return offers[0].get("endDate")
+
+    return game.get("expiryDate")
