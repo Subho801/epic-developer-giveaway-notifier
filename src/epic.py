@@ -127,9 +127,9 @@ def fetch_official_freebies(country="US"):
 
     return official
 
-def fetch_catalog(country="US"):
+def fetch_catalog_page(country="US", start=0):
     """
-    Fetch one page of Epic catalog.
+    Fetch a single page from the Epic catalog.
     """
 
     payload = {
@@ -140,7 +140,7 @@ def fetch_catalog(country="US"):
             "country": country,
             "sortBy": "releaseDate",
             "sortDir": "DESC",
-            "start": 0,
+            "start": start,
             "priceRange": None,
         },
     }
@@ -153,10 +153,43 @@ def fetch_catalog(country="US"):
 
     response.raise_for_status()
 
-    return (
-        response.json()["data"]["Catalog"]
-        ["searchStore"]["elements"]
+    search = (
+        response.json()["data"]["Catalog"]["searchStore"]
     )
+
+    return (
+        search["elements"],
+        search["paging"]["total"]
+    )
+
+def fetch_all_catalog(country="US"):
+    """
+    Fetch every page of the Epic catalog.
+    """
+
+    games = []
+
+    start = 0
+    total = None
+
+    while True:
+
+        elements, total_results = fetch_catalog_page(
+            country,
+            start,
+        )
+
+        games.extend(elements)
+
+        if total is None:
+            total = total_results
+
+        start += PAGE_SIZE
+
+        if start >= total:
+            break
+
+    return games
 
 def is_free(game):
     """
@@ -184,7 +217,7 @@ def developer_giveaways(country="US"):
 
     official = fetch_official_freebies(country)
 
-    catalog = fetch_catalog(country)
+    catalog = fetch_all_catalog(country)
 
     giveaways = []
 
