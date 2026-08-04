@@ -84,4 +84,13 @@ def send_giveaway(webhook_url, game):
 
     webhook.add_embed(embed)
 
-    return webhook.execute()
+    response = webhook.execute()
+
+print(f"Webhook status code {response.status_code}")
+
+try:
+    print(response.text)
+except Exception:
+    pass
+
+return response
